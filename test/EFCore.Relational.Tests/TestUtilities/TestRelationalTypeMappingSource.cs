@@ -196,6 +196,30 @@ namespace Microsoft.EntityFrameworkCore.TestUtilities
                         size);
                 }
 
+                if (clrType == typeof(decimal)
+                    && !string.Equals("money", storeTypeName, StringComparison.Ordinal))
+                {
+                    var precision = mappingInfo.Precision;
+                    var scale = mappingInfo.Scale;
+                    if (precision == _defaultDecimalMapping.Precision
+                        && scale == _defaultDecimalMapping.Scale)
+                    {
+                        return _defaultDecimalMapping;
+                    }
+
+                    if (scale == null)
+                    {
+                        return new DecimalTypeMapping(
+                            "decimal_mapping(" + precision + ")",
+                            precision: precision);
+                    }
+
+                    return new DecimalTypeMapping(
+                        "decimal_mapping(" + precision + "," + scale + ")",
+                        precision: precision,
+                        scale: scale);
+                }
+
                 if (_simpleMappings.TryGetValue(clrType, out var mapping))
                 {
                     return storeTypeName != null
