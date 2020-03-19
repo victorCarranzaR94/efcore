@@ -51,7 +51,9 @@ function Add-Migration
         [string] $Context,
         [string] $Project,
         [string] $StartupProject,
-        [string] $Namespace)
+        [string] $Namespace,
+        [Parameter(ValueFromRemainingArguments)]
+        [string[]] $RemainingArguments)
 
     WarnIfEF6 'Add-Migration'
 
@@ -71,6 +73,7 @@ function Add-Migration
     }
 
     $params += GetParams $Context
+    $params += $RemainingArguments
 
     # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
     $result = (EF $dteProject $dteStartupProject $params) -join "`n" | ConvertFrom-Json
@@ -118,7 +121,12 @@ Register-TabExpansion Drop-Database @{
 function Drop-Database
 {
     [CmdletBinding(PositionalBinding = $false, SupportsShouldProcess = $true, ConfirmImpact = 'High')]
-    param([string] $Context, [string] $Project, [string] $StartupProject)
+    param(
+        [string] $Context,
+        [string] $Project,
+        [string] $StartupProject,
+        [Parameter(ValueFromRemainingArguments)]
+        [string[]] $RemainingArguments)
 
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
@@ -129,6 +137,7 @@ function Drop-Database
     {
         $params = 'database', 'drop', '--force'
         $params += GetParams $Context
+        $params += $RemainingArguments
 
         EF $dteProject $dteStartupProject $params -skipBuild
     }
@@ -176,7 +185,12 @@ Register-TabExpansion Get-DbContext @{
 function Get-DbContext
 {
     [CmdletBinding(PositionalBinding = $false)]
-    param([string] $Context, [string] $Project, [string] $StartupProject)
+    param(
+        [string] $Context,
+        [string] $Project,
+        [string] $StartupProject,
+        [Parameter(ValueFromRemainingArguments)]
+        [string[]] $RemainingArguments)
 
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
@@ -185,6 +199,7 @@ function Get-DbContext
     {
        $params = 'dbcontext', 'info', '--json'
        $params += GetParams $Context
+       $params += $RemainingArguments
        # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
        return (EF $dteProject $dteStartupProject $params) -join "`n" | ConvertFrom-Json
     }
@@ -232,7 +247,13 @@ Register-TabExpansion Remove-Migration @{
 function Remove-Migration
 {
     [CmdletBinding(PositionalBinding = $false)]
-    param([switch] $Force, [string] $Context, [string] $Project, [string] $StartupProject)
+    param(
+        [switch] $Force,
+        [string] $Context,
+        [string] $Project,
+        [string] $StartupProject,
+        [Parameter(ValueFromRemainingArguments)]
+        [string[]] $RemainingArguments)
 
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
@@ -245,6 +266,7 @@ function Remove-Migration
     }
 
     $params += GetParams $Context
+    $params += $RemainingArguments
 
     # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
     $result = (EF $dteProject $dteStartupProject $params) -join "`n" | ConvertFrom-Json
@@ -342,7 +364,9 @@ function Scaffold-DbContext
         [string] $Project,
         [string] $StartupProject,
         [string] $Namespace,
-        [string] $ContextNamespace)
+        [string] $ContextNamespace,
+        [Parameter(ValueFromRemainingArguments)]
+        [string[]] $RemainingArguments)
 
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
@@ -392,6 +416,8 @@ function Scaffold-DbContext
         $params += '--force'
     }
 
+    $params += $RemainingArguments
+
     # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
     $result = (EF $dteProject $dteStartupProject $params) -join "`n" | ConvertFrom-Json
 
@@ -440,7 +466,9 @@ function Script-DbContext
         [string] $Output,
         [string] $Context,
         [string] $Project,
-        [string] $StartupProject)
+        [string] $StartupProject,
+        [Parameter(ValueFromRemainingArguments)]
+        [string[]] $RemainingArguments)
 
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
@@ -465,6 +493,7 @@ function Script-DbContext
     $params = 'dbcontext', 'script', '--output', $Output
 
     $params += GetParams $Context
+    $params += $RemainingArguments
 
     EF $dteProject $dteStartupProject $params
 
@@ -529,7 +558,9 @@ function Script-Migration
         [string] $Output,
         [string] $Context,
         [string] $Project,
-        [string] $StartupProject)
+        [string] $StartupProject,
+        [Parameter(ValueFromRemainingArguments)]
+        [string[]] $RemainingArguments)
 
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
@@ -569,6 +600,7 @@ function Script-Migration
     }
 
     $params += GetParams $Context
+    $params += $RemainingArguments
 
     EF $dteProject $dteStartupProject $params
 
@@ -622,7 +654,9 @@ function Update-Database
         [string] $Connection,
         [string] $Context,
         [string] $Project,
-        [string] $StartupProject)
+        [string] $StartupProject,
+        [Parameter(ValueFromRemainingArguments)]
+        [string[]] $RemainingArguments)
 
     WarnIfEF6 'Update-Database'
 
@@ -642,6 +676,7 @@ function Update-Database
     }
 
     $params += GetParams $Context
+    $params += $RemainingArguments
 
     EF $dteProject $dteStartupProject $params
 }
