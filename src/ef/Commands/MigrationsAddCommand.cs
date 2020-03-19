@@ -22,7 +22,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
         protected override int Execute()
         {
             var files = CreateExecutor().AddMigration(
-                _name.Value, _outputDir.Value(), Context.Value(), _namespace.Value());
+                _name.Value, _outputDir.Value(), Context.Value(), _namespace.Value(), RemainingArguments);
 
             if (_json.HasValue())
             {
