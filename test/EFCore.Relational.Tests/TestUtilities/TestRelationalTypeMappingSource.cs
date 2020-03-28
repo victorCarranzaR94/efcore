@@ -207,7 +207,7 @@ namespace Microsoft.EntityFrameworkCore.TestUtilities
                         return _defaultDecimalMapping;
                     }
 
-                    if (scale == null)
+                    if (scale == null || scale == 0)
                     {
                         return new DecimalTypeMapping(
                             "decimal_mapping(" + precision + ")",

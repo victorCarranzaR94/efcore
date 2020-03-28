@@ -438,6 +438,7 @@ namespace Microsoft.EntityFrameworkCore.Storage
                             if (StoreTypeNameBasesUsingPrecision.Contains(storeTypeNameBase))
                             {
                                 precision = parsedSize;
+                                scale = 0;
                             }
                             else
                             {

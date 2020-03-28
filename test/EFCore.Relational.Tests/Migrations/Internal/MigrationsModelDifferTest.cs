@@ -2084,7 +2084,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations.Internal
                     Assert.Equal("Toad", operation.Table);
                     Assert.Equal("Salary", operation.Name);
                     Assert.Equal(10, operation.Precision);
-                    Assert.Null(operation.Scale);
+                    Assert.Equal(0, operation.Scale);
                     Assert.True(operation.IsDestructiveChange);
                 });
         }

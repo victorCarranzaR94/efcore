@@ -3361,13 +3361,13 @@ UnicodeDataTypes.StringUnicode ---> [nullable nvarchar] [MaxLength = -1]
             [Column(TypeName = "datetime2(3)")]
             public DateTime DateTimeAsDatetime23 { get; set; }
 
-            [Column(TypeName = "decimal(3,0)")]
+            [Column(TypeName = "decimal(3)")]
             public decimal DecimalAsDecimal3 { get; set; }
 
-            [Column(TypeName = "dec(3,0)")]
+            [Column(TypeName = "dec(3)")]
             public decimal DecimalAsDec3 { get; set; }
 
-            [Column(TypeName = "numeric(3,0)")]
+            [Column(TypeName = "numeric(3)")]
             public decimal DecimalAsNumeric3 { get; set; }
         }
 
@@ -3791,13 +3791,13 @@ UnicodeDataTypes.StringUnicode ---> [nullable nvarchar] [MaxLength = -1]
             [Column(TypeName = "datetime2(3)")]
             public DateTime DateTimeAsDatetime23 { get; set; }
 
-            [Column(TypeName = "decimal(3,0)")]
+            [Column(TypeName = "decimal(3)")]
             public decimal DecimalAsDecimal3 { get; set; }
 
-            [Column(TypeName = "dec(3,0)")]
+            [Column(TypeName = "dec(3)")]
             public decimal DecimalAsDec3 { get; set; }
 
-            [Column(TypeName = "numeric(3,0)")]
+            [Column(TypeName = "numeric(3)")]
             public decimal DecimalAsNumeric3 { get; set; }
         }
 
