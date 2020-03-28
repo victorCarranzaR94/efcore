@@ -235,5 +235,8 @@ namespace Microsoft.EntityFrameworkCore.TestUtilities
                     ? mappingFromName
                     : null;
         }
+
+        protected override ICollection<string> StoreTypeNameBasesUsingPrecision
+            => new List<string>() { "default_decimal_mapping" };
     }
 }

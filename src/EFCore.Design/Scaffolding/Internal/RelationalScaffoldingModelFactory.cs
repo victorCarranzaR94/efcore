@@ -423,13 +423,10 @@ namespace Microsoft.EntityFrameworkCore.Scaffolding.Internal
 
             property.HasColumnName(column.Name);
 
-            //LAJ LAJ - check whether ColumnType overrides Precision & Scale
-            var setColumnType = false;
             if (!typeScaffoldingInfo.IsInferred
                 && !string.IsNullOrWhiteSpace(column.StoreType))
             {
                 property.HasColumnType(column.StoreType);
-                setColumnType = true;
             }
 
             if (typeScaffoldingInfo.ScaffoldUnicode.HasValue)
@@ -447,8 +444,7 @@ namespace Microsoft.EntityFrameworkCore.Scaffolding.Internal
                 property.HasMaxLength(typeScaffoldingInfo.ScaffoldMaxLength.Value);
             }
 
-            if (!setColumnType
-                && typeScaffoldingInfo.ScaffoldPrecision.HasValue)
+            if (typeScaffoldingInfo.ScaffoldPrecision.HasValue)
             {
                 if (typeScaffoldingInfo.ScaffoldScale.HasValue)
                 {
