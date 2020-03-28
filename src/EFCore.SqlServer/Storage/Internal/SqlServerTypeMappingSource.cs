@@ -361,6 +361,6 @@ namespace Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal
         }
 
         protected override ICollection<string> StoreTypeNameBasesUsingPrecision
-            => new List<string>() { "decimal", "numeric" };
+            => new List<string>() { "decimal", "dec", "numeric" };
     }
 }
