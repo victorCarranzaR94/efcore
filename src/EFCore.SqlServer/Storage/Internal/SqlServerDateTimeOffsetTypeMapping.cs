@@ -73,6 +73,11 @@ namespace Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal
             {
                 parameter.Size = Size.Value;
             }
+
+            if (Precision.HasValue)
+            {
+                parameter.Precision = unchecked((byte)Precision.Value);
+            }
         }
     }
 }
