@@ -898,7 +898,7 @@ namespace Microsoft.EntityFrameworkCore.Query.SqlExpressions
         }
 
         public CollectionShaperExpression AddCollectionProjection(
-            [NotNull] ShapedQueryExpression shapedQueryExpression, [CanBeNull] INavigation navigation, [CanBeNull] Type elementType)
+            [NotNull] ShapedQueryExpression shapedQueryExpression, [CanBeNull] INavigationBase navigation, [CanBeNull] Type elementType)
         {
             Check.NotNull(shapedQueryExpression, nameof(shapedQueryExpression));
 
@@ -916,7 +916,7 @@ namespace Microsoft.EntityFrameworkCore.Query.SqlExpressions
             int collectionIndex,
             int collectionId,
             [NotNull] Expression innerShaper,
-            [CanBeNull] INavigation navigation,
+            [CanBeNull] INavigationBase navigation,
             [NotNull] Type elementType)
         {
             Check.NotNull(innerShaper, nameof(innerShaper));

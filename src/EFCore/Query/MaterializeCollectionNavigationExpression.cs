@@ -11,7 +11,7 @@ namespace Microsoft.EntityFrameworkCore.Query
 {
     public class MaterializeCollectionNavigationExpression : Expression, IPrintableExpression
     {
-        public MaterializeCollectionNavigationExpression([NotNull] Expression subquery, [NotNull] INavigation navigation)
+        public MaterializeCollectionNavigationExpression([NotNull] Expression subquery, [NotNull] INavigationBase navigation)
         {
             Check.NotNull(subquery, nameof(subquery));
             Check.NotNull(navigation, nameof(navigation));
@@ -21,7 +21,7 @@ namespace Microsoft.EntityFrameworkCore.Query
         }
 
         public virtual Expression Subquery { get; }
-        public virtual INavigation Navigation { get; }
+        public virtual INavigationBase Navigation { get; }
 
         public sealed override ExpressionType NodeType => ExpressionType.Extension;
         public override Type Type => Navigation.ClrType;
@@ -49,7 +49,7 @@ namespace Microsoft.EntityFrameworkCore.Query
             expressionPrinter.AppendLine("MaterializeCollectionNavigation(");
             using (expressionPrinter.Indent())
             {
-                expressionPrinter.AppendLine($"navigation: Navigation: {Navigation.DeclaringEntityType.DisplayName()}.{Navigation.Name},");
+                expressionPrinter.AppendLine($"navigation: {Navigation.DeclaringEntityType.DisplayName()}.{Navigation.Name},");
                 expressionPrinter.Append("subquery: ");
                 expressionPrinter.Visit(Subquery);
             }

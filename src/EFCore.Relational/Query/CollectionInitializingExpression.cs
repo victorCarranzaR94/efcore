@@ -16,7 +16,7 @@ namespace Microsoft.EntityFrameworkCore.Query
             [CanBeNull] Expression parent,
             [NotNull] Expression parentIdentifier,
             [NotNull] Expression outerIdentifier,
-            [CanBeNull] INavigation navigation,
+            [CanBeNull] INavigationBase navigation,
             [NotNull] Type type)
         {
             Check.NotNull(parentIdentifier, nameof(parentIdentifier));
@@ -30,6 +30,15 @@ namespace Microsoft.EntityFrameworkCore.Query
             Navigation = navigation;
             Type = type;
         }
+
+        public virtual int CollectionId { get; }
+        public virtual Expression Parent { get; }
+        public virtual Expression ParentIdentifier { get; }
+        public virtual Expression OuterIdentifier { get; }
+        public virtual INavigationBase Navigation { get; }
+
+        public override Type Type { get; }
+        public sealed override ExpressionType NodeType => ExpressionType.Extension;
 
         protected override Expression VisitChildren(ExpressionVisitor visitor)
         {
@@ -64,15 +73,5 @@ namespace Microsoft.EntityFrameworkCore.Query
                 expressionPrinter.AppendLine();
             }
         }
-
-        public override Type Type { get; }
-
-        public sealed override ExpressionType NodeType => ExpressionType.Extension;
-
-        public virtual int CollectionId { get; }
-        public virtual Expression Parent { get; }
-        public virtual Expression ParentIdentifier { get; }
-        public virtual Expression OuterIdentifier { get; }
-        public virtual INavigation Navigation { get; }
     }
 }

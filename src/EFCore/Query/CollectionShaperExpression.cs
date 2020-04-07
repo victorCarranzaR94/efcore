@@ -15,7 +15,7 @@ namespace Microsoft.EntityFrameworkCore.Query
         public CollectionShaperExpression(
             [NotNull] Expression projection,
             [NotNull] Expression innerShaper,
-            [CanBeNull] INavigation navigation,
+            [CanBeNull] INavigationBase navigation,
             [CanBeNull] Type elementType)
         {
             Check.NotNull(projection, nameof(projection));
@@ -54,7 +54,7 @@ namespace Microsoft.EntityFrameworkCore.Query
 
         public virtual Expression Projection { get; }
         public virtual Expression InnerShaper { get; }
-        public virtual INavigation Navigation { get; }
+        public virtual INavigationBase Navigation { get; }
         public virtual Type ElementType { get; }
 
         public virtual void Print(ExpressionPrinter expressionPrinter)

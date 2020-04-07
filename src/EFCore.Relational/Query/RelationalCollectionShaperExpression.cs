@@ -20,7 +20,7 @@ namespace Microsoft.EntityFrameworkCore.Query
             [NotNull] Expression outerIdentifier,
             [NotNull] Expression selfIdentifier,
             [NotNull] Expression innerShaper,
-            [CanBeNull] INavigation navigation,
+            [CanBeNull] INavigationBase navigation,
             [NotNull] Type elementType)
             : this(collectionId, parentIdentifier, outerIdentifier, selfIdentifier,
                   null, null, null, innerShaper, navigation, elementType)
@@ -37,7 +37,7 @@ namespace Microsoft.EntityFrameworkCore.Query
             [CanBeNull] IReadOnlyList<ValueComparer> outerIdentifierValueComparers,
             [CanBeNull] IReadOnlyList<ValueComparer> selfIdentifierValueComparers,
             [NotNull] Expression innerShaper,
-            [CanBeNull] INavigation navigation,
+            [CanBeNull] INavigationBase navigation,
             [NotNull] Type elementType)
         {
             Check.NotNull(parentIdentifier, nameof(parentIdentifier));
@@ -67,7 +67,7 @@ namespace Microsoft.EntityFrameworkCore.Query
         public virtual IReadOnlyList<ValueComparer> SelfIdentifierValueComparers { get; }
 
         public virtual Expression InnerShaper { get; }
-        public virtual INavigation Navigation { get; }
+        public virtual INavigationBase Navigation { get; }
         public virtual Type ElementType { get; }
 
         public override Type Type => Navigation?.ClrType ?? typeof(List<>).MakeGenericType(ElementType);

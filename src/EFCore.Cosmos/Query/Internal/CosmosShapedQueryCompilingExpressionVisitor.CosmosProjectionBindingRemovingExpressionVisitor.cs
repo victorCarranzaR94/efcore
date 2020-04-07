@@ -215,8 +215,9 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
                     var lambda = (LambdaExpression)methodCallExpression.Arguments[1];
                     if (lambda.Body is IncludeExpression includeExpression)
                     {
-                        if (includeExpression.Navigation.IsOnDependent
-                            || includeExpression.Navigation.ForeignKey.DeclaringEntityType.IsDocumentRoot())
+                        if (!(includeExpression.Navigation is INavigation navigation)
+                            || navigation.IsOnDependent
+                            || navigation.ForeignKey.DeclaringEntityType.IsDocumentRoot())
                         {
                             throw new InvalidOperationException(CosmosStrings.NonEmbeddedIncludeNotSupported(includeExpression.Print()));
                         }
@@ -295,8 +296,9 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
 
                     case IncludeExpression includeExpression:
                     {
-                        if (includeExpression.Navigation.IsOnDependent
-                            || includeExpression.Navigation.ForeignKey.DeclaringEntityType.IsDocumentRoot())
+                        if (!(includeExpression.Navigation is INavigation navigation)
+                            || navigation.IsOnDependent
+                            || navigation.ForeignKey.DeclaringEntityType.IsDocumentRoot())
                         {
                             throw new InvalidOperationException(CosmosStrings.NonEmbeddedIncludeNotSupported(includeExpression.Print()));
                         }
@@ -385,7 +387,7 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
                         concreteEntityTypeVariable,
                         navigationExpression,
                         Expression.Constant(navigation),
-                        Expression.Constant(inverseNavigation, typeof(INavigation)),
+                        Expression.Constant(inverseNavigation, typeof(INavigationBase)),
                         Expression.Constant(fixup),
                         Expression.Constant(initialize, typeof(Action<>).MakeGenericType(includingClrType))));
             }
@@ -399,8 +401,8 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
                 object entity,
                 IEntityType entityType,
                 TIncludedEntity relatedEntity,
-                INavigation navigation,
-                INavigation inverseNavigation,
+                INavigationBase navigation,
+                INavigationBase inverseNavigation,
                 Action<TIncludingEntity, TIncludedEntity> fixup,
                 Action<TIncludingEntity> _)
             {
@@ -440,8 +442,8 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
                 object entity,
                 IEntityType entityType,
                 IEnumerable<TIncludedEntity> relatedEntities,
-                INavigation navigation,
-                INavigation inverseNavigation,
+                INavigationBase navigation,
+                INavigationBase inverseNavigation,
                 Action<TIncludingEntity, TIncludedEntity> fixup,
                 Action<TIncludingEntity> initialize)
             {
@@ -489,7 +491,7 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
                 }
             }
 
-            private static void SetIsLoadedNoTracking(object entity, INavigation navigation)
+            private static void SetIsLoadedNoTracking(object entity, INavigationBase navigation)
                 => ((ILazyLoader)(navigation
                             .DeclaringEntityType
                             .GetServiceProperties()
@@ -500,8 +502,8 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
             private static Delegate GenerateFixup(
                 Type entityType,
                 Type relatedEntityType,
-                INavigation navigation,
-                INavigation inverseNavigation)
+                INavigationBase navigation,
+                INavigationBase inverseNavigation)
             {
                 var entityParameter = Expression.Parameter(entityType);
                 var relatedEntityParameter = Expression.Parameter(relatedEntityType);
@@ -526,7 +528,7 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
 
             private static Delegate GenerateInitialize(
                 Type entityType,
-                INavigation navigation)
+                INavigationBase navigation)
             {
                 if (!navigation.IsCollection)
                 {
@@ -548,13 +550,13 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
             private static Expression AssignReferenceNavigation(
                 ParameterExpression entity,
                 ParameterExpression relatedEntity,
-                INavigation navigation)
+                INavigationBase navigation)
                 => entity.MakeMemberAccess(navigation.GetMemberInfo(forMaterialization: true, forSet: true)).Assign(relatedEntity);
 
             private static Expression AddToCollectionNavigation(
                 ParameterExpression entity,
                 ParameterExpression relatedEntity,
-                INavigation navigation)
+                INavigationBase navigation)
                 => Expression.Call(
                     Expression.Constant(navigation.GetCollectionAccessor()),
                     _collectionAccessorAddMethodInfo,

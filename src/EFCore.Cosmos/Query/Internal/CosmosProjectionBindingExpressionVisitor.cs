@@ -445,7 +445,8 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
                 }
 
                 case MaterializeCollectionNavigationExpression materializeCollectionNavigationExpression:
-                    return materializeCollectionNavigationExpression.Navigation.IsEmbedded()
+                    return materializeCollectionNavigationExpression.Navigation is INavigation mceNavigation
+                        && mceNavigation.IsEmbedded()
                         ? base.Visit(materializeCollectionNavigationExpression.Subquery)
                         : base.VisitExtension(materializeCollectionNavigationExpression);
 
@@ -455,12 +456,13 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.Internal
                         return null;
                     }
 
-                    if (!includeExpression.Navigation.IsEmbedded())
+                    if (!(includeExpression.Navigation is INavigation navigation
+                        && navigation.IsEmbedded()))
                     {
                         throw new InvalidOperationException(CosmosStrings.NonEmbeddedIncludeNotSupported(includeExpression.Print()));
                     }
 
-                    _includedNavigations.Push(includeExpression.Navigation);
+                    _includedNavigations.Push(navigation);
 
                     var newIncludeExpression = base.VisitExtension(includeExpression);
 

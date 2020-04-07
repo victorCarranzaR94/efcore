@@ -14,7 +14,7 @@ namespace Microsoft.EntityFrameworkCore.Query
         public IncludeExpression(
             [NotNull] Expression entityExpression,
             [NotNull] Expression navigationExpression,
-            [NotNull] INavigation navigation)
+            [NotNull] INavigationBase navigation)
         {
             Check.NotNull(entityExpression, nameof(entityExpression));
             Check.NotNull(navigationExpression, nameof(navigationExpression));
@@ -28,7 +28,7 @@ namespace Microsoft.EntityFrameworkCore.Query
 
         public virtual Expression EntityExpression { get; }
         public virtual Expression NavigationExpression { get; }
-        public virtual INavigation Navigation { get; }
+        public virtual INavigationBase Navigation { get; }
 
         public sealed override ExpressionType NodeType => ExpressionType.Extension;
         public override Type Type { get; }
