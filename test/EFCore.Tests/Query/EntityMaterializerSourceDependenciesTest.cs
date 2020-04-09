@@ -4,7 +4,7 @@
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using Xunit;
 
-namespace Microsoft.EntityFrameworkCore.Query
+namespace Microsoft.EntityFrameworkCore.Query.Internal
 {
     public class EntityMaterializerSourceDependenciesTest
     {
