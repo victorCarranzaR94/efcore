@@ -94,6 +94,8 @@ namespace Microsoft.EntityFrameworkCore.Query
         CaseExpression Case([NotNull] SqlExpression operand, [NotNull] params CaseWhenClause[] whenClauses);
         CaseExpression Case([NotNull] IReadOnlyList<CaseWhenClause> whenClauses, [CanBeNull] SqlExpression elseResult);
 
+        CollateExpression Collate([NotNull] SqlExpression operand, [NotNull] string collation);
+
         [Obsolete("Use overload that explicitly specifies value for 'argumentsPropagateNullability' argument.")]
         SqlFunctionExpression Function(
             [NotNull] string name,
