@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Microsoft.EntityFrameworkCore.Query
 {
-    public class RelationalNorthwindDbFunctionsQueryTestBase<TFixture> : NorthwindDbFunctionsQueryTestBase<TFixture>
+    public abstract class RelationalNorthwindDbFunctionsQueryTestBase<TFixture> : NorthwindDbFunctionsQueryTestBase<TFixture>
         where TFixture : NorthwindQueryRelationalFixture<NoopModelCustomizer>, new()
     {
         public RelationalNorthwindDbFunctionsQueryTestBase(TFixture fixture)
@@ -37,12 +37,7 @@ namespace Microsoft.EntityFrameworkCore.Query
                 c => EF.Functions.Collate(c.ContactName, CaseSensitiveCollation) == "maria anders",
                 c => c.ContactName.Equals("maria anders", StringComparison.Ordinal));
 
-        protected virtual string CaseInsensitiveCollation
-            => throw new NotSupportedException(
-                $"Providers must override the '{nameof(CaseInsensitiveCollation)}' property with a valid, case-insensitive collation name for your database.");
-
-        protected virtual string CaseSensitiveCollation
-            => throw new NotSupportedException(
-                $"Providers must override the '{nameof(CaseSensitiveCollation)}' property with a valid, case-sensitive collation name for your database.");
+        protected abstract string CaseInsensitiveCollation { get; }
+        protected abstract string CaseSensitiveCollation { get; }
     }
 }
