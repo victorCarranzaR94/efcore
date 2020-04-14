@@ -18,7 +18,7 @@ namespace Microsoft.EntityFrameworkCore.Query.SqlExpressions
             : base(operand.Type, typeMapping ?? operand.TypeMapping)
         {
             Check.NotNull(operand, nameof(operand));
-            Check.NotNull(collation, nameof(collation));
+            Check.NotEmpty(collation, nameof(collation));
 
             Operand = operand;
             Collation = collation;
@@ -26,9 +26,6 @@ namespace Microsoft.EntityFrameworkCore.Query.SqlExpressions
 
         public virtual SqlExpression Operand { get; }
         public virtual string Collation { get; }
-
-        public SqlExpression ApplyTypeMapping([CanBeNull] RelationalTypeMapping typeMapping)
-            => new CollateExpression(Operand, Collation, typeMapping ?? TypeMapping);
 
         protected override Expression VisitChildren(ExpressionVisitor visitor)
             => Update((SqlExpression)visitor.Visit(Operand));
