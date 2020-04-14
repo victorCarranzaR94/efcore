@@ -32,6 +32,22 @@ namespace Microsoft.EntityFrameworkCore.Query
 
         protected virtual QueryableMethodTranslatingExpressionVisitorDependencies Dependencies { get; }
 
+        public virtual string TranslationErrorDetails { get; private set; }
+
+        protected virtual void ProvideTranslationErrorDetails([NotNull] string details)
+        {
+            Check.NotNull(details, nameof(details));
+
+            if (TranslationErrorDetails == null)
+            {
+                TranslationErrorDetails = details;
+            }
+            else
+            {
+                TranslationErrorDetails += " " + details;
+            }
+        }
+
         protected override Expression VisitExtension(Expression extensionExpression)
         {
             Check.NotNull(extensionExpression, nameof(extensionExpression));
@@ -50,7 +66,17 @@ namespace Microsoft.EntityFrameworkCore.Query
 
             ShapedQueryExpression CheckTranslated(ShapedQueryExpression translated)
             {
-                return translated ?? throw new InvalidOperationException(CoreStrings.TranslationFailed(methodCallExpression.Print()));
+                if (translated != null)
+                {
+                    return translated;
+                }
+
+                throw new InvalidOperationException(
+                    TranslationErrorDetails == null
+                        ? CoreStrings.TranslationFailed(methodCallExpression.Print())
+                        : CoreStrings.TranslationFailedWithDetails(
+                            methodCallExpression.Print(),
+                            TranslationErrorDetails));
             }
 
             var method = methodCallExpression.Method;
@@ -548,7 +574,14 @@ namespace Microsoft.EntityFrameworkCore.Query
         {
             Check.NotNull(expression, nameof(expression));
 
-            return (ShapedQueryExpression)CreateSubqueryVisitor().Visit(expression);
+            var subqueryVisitor = CreateSubqueryVisitor();
+            var result = (ShapedQueryExpression)subqueryVisitor.Visit(expression);
+            if (subqueryVisitor.TranslationErrorDetails != null)
+            {
+                ProvideTranslationErrorDetails(subqueryVisitor.TranslationErrorDetails);
+            }
+
+            return result;
         }
 
         protected abstract QueryableMethodTranslatingExpressionVisitor CreateSubqueryVisitor();

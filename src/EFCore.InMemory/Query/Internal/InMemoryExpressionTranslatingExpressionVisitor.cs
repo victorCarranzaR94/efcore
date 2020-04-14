@@ -67,7 +67,32 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Query.Internal
             _model = queryCompilationContext.Model;
         }
 
+        public virtual string TranslationErrorDetails { get; private set; }
+
+        protected virtual void ProvideTranslationErrorDetails([NotNull] string details)
+        {
+            Check.NotNull(details, nameof(details));
+
+            if (TranslationErrorDetails == null)
+            {
+                TranslationErrorDetails = details;
+            }
+            else
+            {
+                TranslationErrorDetails += " " + details;
+            }
+        }
+
         public virtual Expression Translate([NotNull] Expression expression)
+        {
+            Check.NotNull(expression, nameof(expression));
+
+            TranslationErrorDetails = null;
+
+            return TranslateInternal(expression);
+        }
+
+        private Expression TranslateInternal(Expression expression)
         {
             var result = Visit(expression);
 
@@ -220,6 +245,14 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Query.Internal
                 return result;
             }
 
+            if (innerExpression is EntityReferenceExpression entityReferenceExpression)
+            {
+                ProvideTranslationErrorDetails(
+                    CoreStrings.QueryUnableToTranslateMember(
+                        memberExpression.Member.Name,
+                        entityReferenceExpression.EntityType.DisplayName()));
+            }
+
             var updatedMemberExpression = (Expression)memberExpression.Update(innerExpression);
             if (innerExpression != null
                 && innerExpression.Type.IsNullableType()
@@ -294,7 +327,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Query.Internal
                     case nameof(Enumerable.Min):
                     case nameof(Enumerable.Sum):
                     {
-                        var translation = Translate(GetSelectorOnGrouping(methodCallExpression, groupByShaperExpression));
+                        var translation = TranslateInternal(GetSelectorOnGrouping(methodCallExpression, groupByShaperExpression));
                         if (translation == null)
                         {
                             return null;
@@ -337,7 +370,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Query.Internal
                                 groupByShaperExpression.GroupingParameter);
                         }
 
-                        var translation = Translate(predicate);
+                        var translation = TranslateInternal(predicate);
                         if (translation == null)
                         {
                             return null;

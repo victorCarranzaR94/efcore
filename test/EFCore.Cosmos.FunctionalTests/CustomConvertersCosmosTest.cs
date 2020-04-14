@@ -179,6 +179,11 @@ WHERE (c[""Discriminator""] IN (""Blog"", ""RssBlog"") AND NOT((c[""IndexerVisib
             AssertSql(@" ");
         }
 
+        public override void Collection_property_as_scalar_Count_member()
+        {
+            base.Collection_property_as_scalar_Count_member();
+        }
+
         private void AssertSql(params string[] expected)
             => Fixture.TestSqlLoggerFactory.AssertBaseline(expected);
 
