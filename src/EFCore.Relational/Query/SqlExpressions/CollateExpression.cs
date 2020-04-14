@@ -27,13 +27,20 @@ namespace Microsoft.EntityFrameworkCore.Query.SqlExpressions
         public virtual SqlExpression Operand { get; }
         public virtual string Collation { get; }
 
+        public SqlExpression ApplyTypeMapping([CanBeNull] RelationalTypeMapping typeMapping)
+            => new CollateExpression(Operand, Collation, typeMapping ?? TypeMapping);
+
         protected override Expression VisitChildren(ExpressionVisitor visitor)
             => Update((SqlExpression)visitor.Visit(Operand));
 
         public virtual CollateExpression Update([NotNull] SqlExpression operand)
-            => operand == Operand
-                ? this
-                : new CollateExpression(operand, Collation, TypeMapping);
+        {
+            Check.NotNull(operand, nameof(operand));
+
+            return operand != Operand
+                ? new CollateExpression(operand, Collation, TypeMapping)
+                : this;
+        }
 
         public override void Print(ExpressionPrinter expressionPrinter)
         {
@@ -48,13 +55,13 @@ namespace Microsoft.EntityFrameworkCore.Query.SqlExpressions
         public override bool Equals(object obj)
             => obj != null
                 && (ReferenceEquals(this, obj)
-                    || obj is CollateExpression likeExpression
-                    && Equals(likeExpression));
+                    || obj is CollateExpression collateExpression
+                    && Equals(collateExpression));
 
         private bool Equals(CollateExpression collateExpression)
             => base.Equals(collateExpression)
                 && Operand.Equals(collateExpression.Operand)
-                && Collation == collateExpression.Collation;
+                && Collation.Equals(collateExpression.Collation, StringComparison.Ordinal);
 
         public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Operand, Collation);
     }

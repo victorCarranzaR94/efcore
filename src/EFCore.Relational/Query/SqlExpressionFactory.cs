@@ -58,6 +58,7 @@ namespace Microsoft.EntityFrameworkCore.Query
             return sqlExpression switch
             {
                 CaseExpression e => ApplyTypeMappingOnCase(e, typeMapping),
+                CollateExpression e => e.ApplyTypeMapping(typeMapping),
                 LikeExpression e => ApplyTypeMappingOnLike(e),
                 SqlBinaryExpression e => ApplyTypeMappingOnSqlBinary(e, typeMapping),
                 SqlUnaryExpression e => ApplyTypeMappingOnSqlUnary(e, typeMapping),
