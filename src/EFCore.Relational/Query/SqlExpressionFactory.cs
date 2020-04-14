@@ -500,7 +500,7 @@ namespace Microsoft.EntityFrameworkCore.Query
             Check.NotNull(operand, nameof(operand));
             Check.NotNull(collation, nameof(collation));
 
-            return (CollateExpression)ApplyDefaultTypeMapping(new CollateExpression(operand, collation));
+            return new CollateExpression(operand, collation);
         }
 
         [Obsolete("Use overload that explicitly specifies value for 'argumentsPropagateNullability' argument.")]
