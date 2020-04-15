@@ -29,7 +29,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
                 && Equals(method.GetGenericMethodDefinition(), _methodInfo)
                 && arguments[2] is SqlConstantExpression constantExpression
                 && constantExpression.Value is string collation
-                    ? _sqlExpressionFactory.Collate(arguments[1], collation)
+                    ? new CollateExpression(arguments[1], collation)
                     : null;
         }
     }

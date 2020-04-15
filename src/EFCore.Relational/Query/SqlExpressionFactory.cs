@@ -502,14 +502,6 @@ namespace Microsoft.EntityFrameworkCore.Query
             return new CaseExpression(typeMappedWhenClauses, elseResult);
         }
 
-        public virtual CollateExpression Collate(SqlExpression operand, string collation)
-        {
-            Check.NotNull(operand, nameof(operand));
-            Check.NotNull(collation, nameof(collation));
-
-            return new CollateExpression(operand, collation);
-        }
-
         [Obsolete("Use overload that explicitly specifies value for 'argumentsPropagateNullability' argument.")]
         public virtual SqlFunctionExpression Function(
             string name,

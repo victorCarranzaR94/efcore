@@ -13,9 +13,8 @@ namespace Microsoft.EntityFrameworkCore.Query.SqlExpressions
     {
         public CollateExpression(
             [NotNull] SqlExpression operand,
-            [NotNull] string collation,
-            [CanBeNull] RelationalTypeMapping typeMapping = null)
-            : base(operand.Type, typeMapping ?? operand.TypeMapping)
+            [NotNull] string collation)
+            : base(operand.Type, operand.TypeMapping)
         {
             Check.NotNull(operand, nameof(operand));
             Check.NotEmpty(collation, nameof(collation));
@@ -35,7 +34,7 @@ namespace Microsoft.EntityFrameworkCore.Query.SqlExpressions
             Check.NotNull(operand, nameof(operand));
 
             return operand != Operand
-                ? new CollateExpression(operand, Collation, TypeMapping)
+                ? new CollateExpression(operand, Collation)
                 : this;
         }
 
