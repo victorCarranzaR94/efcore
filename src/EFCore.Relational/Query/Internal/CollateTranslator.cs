@@ -15,11 +15,6 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
         private static readonly MethodInfo _methodInfo
             = typeof(RelationalDbFunctionsExtensions).GetMethod(nameof(RelationalDbFunctionsExtensions.Collate));
 
-        private readonly ISqlExpressionFactory _sqlExpressionFactory;
-
-        public CollateTranslator([NotNull] ISqlExpressionFactory sqlExpressionFactory)
-            => _sqlExpressionFactory = sqlExpressionFactory;
-
         public virtual SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments)
         {
             Check.NotNull(method, nameof(method));
