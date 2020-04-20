@@ -17,6 +17,10 @@ namespace Microsoft.EntityFrameworkCore
         ///         <code>WHERE customer.name COLLATE 'de_DE' = 'John Doe'</code>.
         ///     </para>
         ///     <para>
+        ///         Explicitly applying a collation could prevent your database from using a column index, leading to a
+        ///         significant performance impact on your query.
+        ///     </para>
+        ///     <para>
         ///         The available collations and their names vary across databases, consult your database's documentation for more
         ///         information.
         ///     </para>
